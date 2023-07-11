@@ -1,0 +1,42 @@
+{
+	"competition": {
+		"id": 2013,
+		"name": "Campeonato Brasileiro Série A",
+		"code": "BSA",
+		"type": "LEAGUE",
+		"emblem": "https://crests.football-data.org/764.svg"
+	},
+	"id": 432443,
+	"utcDate": "2023-04-15T19:00:00Z",
+	"status": "FINISHED",
+	"matchday": 1,
+	"stage": "REGULAR_SEASON",
+	"group": null,
+	"lastUpdated": "2023-05-31T08:20:43Z",
+	"homeTeam": {
+		"id": 1769,
+		"name": "SE Palmeiras",
+		"shortName": "Palmeiras",
+		"tla": "PAL",
+		"crest": "https://crests.football-data.org/1769.png"
+	},
+	"awayTeam": {
+		"id": 4289,
+		"name": "Cuiabá EC",
+		"shortName": "Cuiabá EC",
+		"tla": "CUI",
+		"crest": "https://crests.football-data.org/4289_large.png"
+	},
+	"score": {
+		"winner": "HOME_TEAM",
+		"duration": "REGULAR",
+		"fullTime": {
+			"home": 2,
+			"away": 1
+		},
+		"halfTime": {
+			"home": 1,
+			"away": 1
+		}
+	}
+}
