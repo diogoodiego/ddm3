@@ -1,5 +1,6 @@
 import 'package:ddm3/src/controllers/matches_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MatchesPage extends StatefulWidget {
   const MatchesPage({super.key});
@@ -26,10 +27,38 @@ class _MatchesPageState extends State<MatchesPage> {
         itemCount: matchesController.matches.length,
         itemBuilder: (context, index) {
           var match = matchesController.matches[index];
-          return ListTile(
-            title: Text(
-                match['homeTeam']['name'] + ' x ' + match['awayTeam']['name']),
-          );
+          return Card(
+              clipBehavior: Clip.antiAlias,
+              child: Column(children: [
+                ButtonBar(
+                  alignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton.icon(
+                        onPressed: () {},
+                        icon: SvgPicture.network(
+                          match['homeTeam']['crest'],
+                          width: 48,
+                          height: 48,
+                          placeholderBuilder: (BuildContext context) =>
+                              Image.network(match['homeTeam']['crest'],
+                                  width: 48, height: 48),
+                        ),
+                        label: Text(match['homeTeam']['name'])),
+                    const Text('X'),
+                    TextButton.icon(
+                        onPressed: () {},
+                        icon: SvgPicture.network(
+                          match['awayTeam']['crest'],
+                          width: 48,
+                          height: 48,
+                          placeholderBuilder: (BuildContext context) =>
+                              Image.network(match['awayTeam']['crest'],
+                                  width: 48, height: 48),
+                        ),
+                        label: Text(match['awayTeam']['name'])),
+                  ],
+                )
+              ]));
         });
   }
 
@@ -69,7 +98,11 @@ class _MatchesPageState extends State<MatchesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Partidas'), actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.refresh_rounded))
+        IconButton(
+            onPressed: () {
+              matchesController.start();
+            },
+            icon: const Icon(Icons.refresh_rounded))
       ]),
       body: AnimatedBuilder(
         animation: matchesController.state,

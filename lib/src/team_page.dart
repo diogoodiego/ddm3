@@ -20,6 +20,8 @@ class _TeamPageState extends State<TeamPage> {
 
   final teamController = TeamController();
 
+  checkFavorite() {}
+
   _start() {
     return Container();
   }
@@ -34,74 +36,93 @@ class _TeamPageState extends State<TeamPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Row(
-            children: [
-              SvgPicture.network(
-                team.crest,
-                width: 64,
-                height: 64,
-                placeholderBuilder: (BuildContext context) => Image.network(
-                  team.crest,
-                  width: 64,
-                  height: 64,
-                ),
-              ),
-              Text(team.name)
-            ],
-          ),
+          Card(
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: SvgPicture.network(
+                      team.crest,
+                      width: 48,
+                      height: 48,
+                      placeholderBuilder: (BuildContext context) =>
+                          Image.network(
+                        team.crest,
+                        width: 48,
+                        height: 48,
+                      ),
+                    ),
+                    title: Text(team.name),
+                    subtitle: Text(
+                      team.shortName,
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                    ),
+                  ),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.start,
+                    children: [
+                      if (teamController.isFavorited == true)
+                        OutlinedButton.icon(
+                            onPressed: () {
+                              teamController.unfavorite(team);
+                            },
+                            icon: const Icon(Icons.favorite),
+                            label: const Text("Favorito"))
+                      else
+                        ElevatedButton.icon(
+                            onPressed: () {
+                              teamController.favorite(team);
+                            },
+                            icon: const Icon(Icons.favorite_border_rounded),
+                            label: const Text("Adicionar ao favoritos"))
+                    ],
+                  )
+                ],
+              )),
+          const Text('Partidas'),
           ListView.builder(
               shrinkWrap: true,
               primary: false,
               itemCount: teamController.matches.length,
               itemBuilder: (context, index) {
                 var match = teamController.matches[index];
-                return ListTile(
-                  title: Text(match['homeTeam']['name'] +
-                      ' x ' +
-                      match['awayTeam']['name']),
-                );
+                return Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: Column(children: [
+                      ButtonBar(
+                        alignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                              onPressed: () {},
+                              icon: SvgPicture.network(
+                                match['homeTeam']['crest'],
+                                width: 48,
+                                height: 48,
+                                placeholderBuilder: (BuildContext context) =>
+                                    Image.network(match['homeTeam']['crest'],
+                                        width: 48, height: 48),
+                              ),
+                              label: Text(match['homeTeam']['name'])),
+                          const Text('X'),
+                          TextButton.icon(
+                              onPressed: () {},
+                              icon: SvgPicture.network(
+                                match['awayTeam']['crest'],
+                                width: 48,
+                                height: 48,
+                                placeholderBuilder: (BuildContext context) =>
+                                    Image.network(match['awayTeam']['crest'],
+                                        width: 48, height: 48),
+                              ),
+                              label: Text(match['awayTeam']['name'])),
+                        ],
+                      )
+                    ]));
               }),
         ],
       ),
     );
   }
-  // _success() {
-  //   return Container(
-  //     child: Column(children: [
-  //       Row(
-  //         children: [
-  //           SvgPicture.network(
-  //             team.crest,
-  //             width: 64,
-  //             height: 64,
-  //             placeholderBuilder: (BuildContext context) => Image.network(
-  //               team.crest,
-  //               width: 64,
-  //               height: 64,
-  //             ),
-  //           ),
-  //           Text(team.name)
-  //         ],
-  //       ),
-  //       Row(
-  //         children: [
-  //           ElevatedButton(onPressed: () {}, child: const Text('Visitar site')),
-  //           ElevatedButton(onPressed: () {}, child: const Text('Elenco'))
-  //         ],
-  //       ),
-  //       ListView.builder(
-  //           itemCount: teamController.matches.length,
-  //           itemBuilder: (context, index) {
-  //             var match = teamController.matches[index];
-  //             return ListTile(
-  //               title: Text(match['homeTeam']['name'] +
-  //                   ' x ' +
-  //                   match['awayTeam']['name']),
-  //             );
-  //           }),
-  //     ]),
-  //   );
-  // }
 
   _error() {
     return Center(
@@ -139,7 +160,11 @@ class _TeamPageState extends State<TeamPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(team.name), actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.refresh_rounded))
+        IconButton(
+            onPressed: () {
+              teamController.start(team);
+            },
+            icon: const Icon(Icons.refresh_rounded))
       ]),
       body: AnimatedBuilder(
         animation: teamController.state,

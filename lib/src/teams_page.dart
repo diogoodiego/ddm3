@@ -9,7 +9,7 @@ class TeamsPage extends StatefulWidget {
 }
 
 class _TeamsPageState extends State<TeamsPage> {
-  final homeController = HomeController();
+  final teamsController = TeamsController();
 
   _start() {
     return Container();
@@ -23,30 +23,32 @@ class _TeamsPageState extends State<TeamsPage> {
 
   _success() {
     return ListView.builder(
-        itemCount: homeController.teams.length,
+        itemCount: teamsController.teams.length,
         itemBuilder: (context, index) {
-          var team = homeController.teams[index];
+          var team = teamsController.teams[index];
           return InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => TeamPage(team: team)));
             },
-            child: Container(
-              margin: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  SvgPicture.network(
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: ListTile(
+                leading: SvgPicture.network(
+                  team.crest,
+                  width: 48,
+                  height: 48,
+                  placeholderBuilder: (BuildContext context) => Image.network(
                     team.crest,
                     width: 48,
                     height: 48,
-                    placeholderBuilder: (BuildContext context) => Image.network(
-                      team.crest,
-                      width: 48,
-                      height: 48,
-                    ),
                   ),
-                  Text(team.name)
-                ],
+                ),
+                title: Text(team.name),
+                subtitle: Text(
+                  team.shortName,
+                  style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                ),
               ),
             ),
           );
@@ -57,22 +59,22 @@ class _TeamsPageState extends State<TeamsPage> {
     return Center(
       child: ElevatedButton(
         onPressed: () {
-          homeController.start();
+          teamsController.start();
         },
         child: const Text('Tentar novamente'),
       ),
     );
   }
 
-  stateManage(HomeState state) {
+  stateManage(TeamsState state) {
     switch (state) {
-      case HomeState.start:
+      case TeamsState.start:
         return _start();
-      case HomeState.loading:
+      case TeamsState.loading:
         return _loading();
-      case HomeState.success:
+      case TeamsState.success:
         return _success();
-      case HomeState.error:
+      case TeamsState.error:
         return _error();
       default:
         return _start();
@@ -83,7 +85,7 @@ class _TeamsPageState extends State<TeamsPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    homeController.start();
+    teamsController.start();
   }
 
   @override
@@ -94,16 +96,16 @@ class _TeamsPageState extends State<TeamsPage> {
         actions: [
           IconButton(
             onPressed: () {
-              homeController.start();
+              teamsController.start();
             },
             icon: const Icon(Icons.refresh_rounded),
           )
         ],
       ),
       body: AnimatedBuilder(
-        animation: homeController.state,
+        animation: teamsController.state,
         builder: (context, child) {
-          return stateManage(homeController.state.value);
+          return stateManage(teamsController.state.value);
         },
       ),
     );
